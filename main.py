@@ -8,15 +8,18 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
 
-class Task(db.Model):
+class Blog(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120))
+    title = db.Column(db.String(120))
+    body = db.Column(db.String(500))
 
-    def __intit__(self, name):
-        self.name = name
+    def __intit__(self, title, body):
+        self.title = title
+        self.body = body
+        
 
-tasks = []
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
