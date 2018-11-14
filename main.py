@@ -39,7 +39,7 @@ def newpost():
         
     posts = Blog.query.all()
 
-    return render_template('blog.html', title=" Blog", posts=posts)
+    return render_template('blog.html', title="Blog", posts=posts)
       
 
 
