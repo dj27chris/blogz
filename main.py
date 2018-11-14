@@ -23,7 +23,7 @@ class Blog(db.Model):
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    return render_template('blog.html', title="Build A Blog")
+    return render_template('newpost.html', title="Build A Blog")
 
 
 
@@ -39,7 +39,7 @@ def newpost():
         
     posts = Blog.query.all()
 
-    return render_template('blog.html', title="Blog", posts=posts)
+    return render_template('newpost.html', title="Blog", posts=posts)
       
 
 
