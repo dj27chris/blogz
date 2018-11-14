@@ -17,20 +17,34 @@ class Blog(db.Model):
     def __intit__(self, title, body):
         self.title = title
         self.body = body
-        
+
 
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
-    if request.method == 'POST':
-        task = request.form['task']
-        tasks.append(task)
+    
         
 
     
     return render_template('blogpost.html', title="Build A Blog", tasks=tasks)
+
+
+
+@app.route('/newpost', methods=['POST', 'GET'])
+def newpost():
+     
+     if request.method == 'POST':
+            new_title = request.form['title']
+        new_body = request.form['body']
+        new_post = Blog(new_title, new_post)
+        db.session.add(new_post)
+        db.session.commit()
+
+
+    posts = Blog.query.all()
+     
 
 
 
