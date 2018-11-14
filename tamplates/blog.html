@@ -2,25 +2,30 @@
 
 
 {% block content %}
-        <h1> Blog</h1>
-        <form method='POST'>
-            <label>
-                Title:
-                <input type="text" name="title" />
-            </label>
-            <label type="text" name="body"></label>
-            <input type="submit" value='Add Task' />
-        </form>
+    <h1>Build Your Blog</h1>
 
-        <hr />
+    <form method="POST">
+        <label>
+            Title:
+            <input type="text" name="title"/>
+        </label>
+        <label>
+          Blog Post:
+          <input type="text" name="body" />
+        </label>
 
-        {% if tasks|length == 0 %}
-        <p> No tasks yet</p>
+        <input type="submit" value="New Post">
+    </form>
+
+    <hr>
+
+        {% if posts|length == 0 %}
+        <p> No new posts yet</p>
         {% else %}
              
               <ul>
-                  {% for task in tasks %}
-                  <li>{{task}}</li>
+                  {% for post in posts %}
+                  <li>{{post}}</li>
                   {% endfor %}
               </ul>
         {% endif %}
