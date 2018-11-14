@@ -14,7 +14,7 @@ class Blog(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.String(500))
 
-    def __intit__(self, title, body):
+    def __init__(self, title, body):
         self.title = title
         self.body = body
 
@@ -27,13 +27,13 @@ def index():
     
         new_title = request.form['title']
         new_body = request.form['body']
-        new_post = Blog(new_title, new_post)
+        new_post = Blog(new_title, new_body)
         db.session.add(new_post)
         db.session.commit()
         
     posts = Blog.query.all()
 
-    return render_template('newpost.html', title="Blog", posts=posts)
+    return render_template('blog.html', title="Blog", posts=posts)
       
 
 
@@ -42,7 +42,7 @@ def newpost():
 
     posts = Blog.query.all()
 
-    return render_template('newpost.html', title="All posts", posts=posts)
+    return render_template('blog.html', title="All posts", posts=posts)
 
 
     
