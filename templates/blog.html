@@ -28,7 +28,12 @@
              
               <ul>
                   {% for post in posts %}
-                  <li>{{post.title,post.body}}</li>
+                  <li><h4>{{post.title}}</h4>
+                
+                      {{post.body}}
+                  </li>
+                  <br>
+                  <br>
                   {% endfor %}
               </ul>
         {% endif %}
