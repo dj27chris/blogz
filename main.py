@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, render_template, session, flash
-from flask_sqlalchemy import SQLAlchemy 
+from flask_sqlalchemy import SQLAlchemy  
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -23,14 +23,8 @@ class Blog(db.Model):
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    return render_template('newpost.html', title="Build A Blog")
-
-
-
-@app.route('/newpost', methods=['POST', 'GET'])
-def newpost():
     if request.method == 'POST':
-
+    
         new_title = request.form['title']
         new_body = request.form['body']
         new_post = Blog(new_title, new_post)
@@ -41,6 +35,17 @@ def newpost():
 
     return render_template('newpost.html', title="Blog", posts=posts)
       
+
+
+@app.route('/newpost', methods=['POST', 'GET'])
+def newpost():
+
+    posts = Blog.query.all()
+
+    return render_template('newpost.html', title="All posts", posts=posts)
+
+
+    
 
 
 
