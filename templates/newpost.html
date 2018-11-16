@@ -5,18 +5,26 @@
 <div class="upperbar">
     <h1>Build Your Blog</h1>
 </div>
-
-    <form method="POST">
+<br>
+    <form method="POST" action="/addpost">
         <label>
             Title:
             <input type="text" name="title"/>
         </label>
+        <br><br>
         <label>
-          Blog Post:
-          <input type="text" name="body" />
+          Blog Post: <br>
+          <textarea name="body" rows='10' cols='40'>
+          
+          </textarea>>
         </label>
-
+        <br>
         <input type="submit" value="New Post">
     </form>
+
+    <br><br>
+    <footer>
+            <a href="/">Go Back</a>
+        </footer>
 
 {% endblock %}

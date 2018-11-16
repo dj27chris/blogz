@@ -4,12 +4,8 @@
 {% block content %}
 <div class="upperbar">
     <h1>Build Your Blog</h1>
-    <a href="/newpost">+ Add a Post</a>
+    <a href="/newpost">+ Add a Post</a>  <a href="/">Main Page</a>
 </div>
-    <hr>
-
-    
-
         {% if posts|length == 0 %}
         <p> No new posts yet</p>
         {% else %}
