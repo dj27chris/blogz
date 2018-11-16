@@ -2,25 +2,13 @@
 
 
 {% block content %}
+<div class="upperbar">
     <h1>Build Your Blog</h1>
-
-    <form method="POST">
-        <label>
-            Title:
-            <input type="text" name="title"/>
-        </label>
-        <br>
-        <label>
-          Blog Post: <br>
-          <textarea name="body" rows='10' cols='40'>
-          </textarea>
-        </label>
-
-        <br>
-        <input type="submit" value="New Post">
-    </form>
-
+    <a href="/newpost">+ Add a Post</a>
+</div>
     <hr>
+
+    
 
         {% if posts|length == 0 %}
         <p> No new posts yet</p>
@@ -28,7 +16,8 @@
              
               <ul>
                   {% for post in posts %}
-                  <li><h4>{{post.title}}</h4>
+                  <li><h4>
+                      <a href="/post/{{post.id}}">{{post.title}}</a></h4>
                 
                       {{post.body}}
                   </li>
