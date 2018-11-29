@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy  
+from hashfunc import make_hash_pw, check_hash
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
