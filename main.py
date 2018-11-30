@@ -24,6 +24,7 @@ class Blog(db.Model):
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(120), unique=True)
     email = db.Column.(db.String(120), unique=True)
     pw_hash = db.Column(db.String(120))
     posts = db.relastionship('Blog', backref='owner')
@@ -36,26 +37,49 @@ class User(db.Model):
 @pp.before_request
 def requre_login():
     allowed_routes = ['login', 'register']
-    if request.endpoint not in allowed_routes and 'email' not in session:
+    if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        usernmae = request.form['username']
         password = request.form['password']
-        user = Users.query.filter_by(email=email).first()
+        email = request.form['email']
+        user = Users.query.filter_by(username=username).first()
 
         if user and check_hash(password, user.pw_hash):
-            session['email'] = email
+            session['username'] = username
             flash("You are logged in.")
-            return redirect('/')
+            return redirect('/newpost')
         else:
             flash('Log in user and/or password is incorrect or does not exit', 'error')
 
         return render_template('login.html')
     
+@app.route('/signup', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        verify = request.form['verify']
 
+        if password != verify:
+            return '<h2>Passwords do not match</h2><br><a href="/signup">Go Back</a>'
+
+
+        existing_user = User.query.filter_by(username=username).first()
+        if not existing_user:
+            new_user = User(username, password, email)
+            db.session.add(new_user)
+            db.session.commit()
+            session['username'] = username
+            return redirect('/')
+        else:
+            return '<h2> Duplicate user</h2><br><a href="/register">Go Back</a>'
+   
+    return render_template('signup.html')
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -89,7 +113,10 @@ def addpost():
 
     return redirect('/')
 
-
+@app.route('/logout', methods=['GET'])
+def logout():
+    del session['username']
+    return redirect('/login')
 
 
 
