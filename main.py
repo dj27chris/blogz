@@ -14,11 +14,47 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     body = db.Column(db.String(500))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, title, body):
         self.title = title
         self.body = body
+        self.owner = owner
 
+class User(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column.(db.String(120), unique=True)
+    pw_hash = db.Column(db.String(120))
+    posts = db.relastionship('Blog', backref='owner')
+
+    def __init__(self, email, password):
+        self.email = email
+        self.pw_hash = make_hash_pw(password)
+
+
+@pp.before_request
+def requre_login():
+    allowed_routes = ['login', 'register']
+    if request.endpoint not in allowed_routes and 'email' not in session:
+        return redirect('/login')
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = Users.query.filter_by(email=email).first()
+
+        if user and check_hash(password, user.pw_hash):
+            session['email'] = email
+            flash("You are logged in.")
+            return redirect('/')
+        else:
+            flash('Log in user and/or password is incorrect or does not exit', 'error')
+
+        return render_template('login.html')
+    
 
 
 
@@ -54,7 +90,6 @@ def addpost():
     return redirect('/')
 
 
-    
 
 
 
