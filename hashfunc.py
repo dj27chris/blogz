@@ -15,6 +15,11 @@ def make_hash_pw(password, salt=None):
 def check_hash(password, hash):
     salt = hash.split(',')[1]
 
+    print("\n")
+    print(hash)
+    print(make_hash_pw(password, salt))
+    print("\n")
+
     if make_hash_pw(password, salt) == hash:
         return True
 

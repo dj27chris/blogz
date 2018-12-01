@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy  
 from hashfunc import make_hash_pw, check_hash
+import datetime
+
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -8,6 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:blogz289o@localho
 app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
+app.secret_key = 'y448bTysc%n4k'
 
 class Blog(db.Model):
 
@@ -16,7 +19,7 @@ class Blog(db.Model):
     body = db.Column(db.String(500))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, title, body):
+    def __init__(self, title, body, owner):
         self.title = title
         self.body = body
         self.owner = owner
@@ -25,29 +28,42 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True)
-    email = db.Column.(db.String(120), unique=True)
     pw_hash = db.Column(db.String(120))
-    posts = db.relastionship('Blog', backref='owner')
+    created = db.Column(db.DATETIME, default=datetime.datetime.utcnow)
+    posts = db.relationship('Blog', backref='owner')
 
-    def __init__(self, email, password):
-        self.email = email
+    def __init__(self, username, password):
+        self.username = username
         self.pw_hash = make_hash_pw(password)
 
 
-@pp.before_request
+@app.before_request
 def requre_login():
-    allowed_routes = ['login', 'register']
+    allowed_routes = ['login', 'signup', 'index', 'post']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
+
+@app.route('/', methods=['GET'])
+def index():
+    userId = request.args.get('user')
+
+    if userId:
+        posts = Blog.query.filter_by(owner_id=userId).all()
+    else:
+        posts = Blog.query.all()
+
+    return render_template('index.html', title="Blog", posts=posts)
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        usernmae = request.form['username']
+        username = request.form['username']
         password = request.form['password']
-        email = request.form['email']
-        user = Users.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
 
+
+        
         if user and check_hash(password, user.pw_hash):
             session['username'] = username
             flash("You are logged in.")
@@ -55,13 +71,12 @@ def login():
         else:
             flash('Log in user and/or password is incorrect or does not exit', 'error')
 
-        return render_template('login.html')
+    return render_template('login.html')
     
 @app.route('/signup', methods=['POST', 'GET'])
-def register():
+def signup():
     if request.method == 'POST':
         username = request.form['username']
-        email = request.form['email']
         password = request.form['password']
         verify = request.form['verify']
 
@@ -71,7 +86,7 @@ def register():
 
         existing_user = User.query.filter_by(username=username).first()
         if not existing_user:
-            new_user = User(username, password, email)
+            new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
             session['username'] = username
@@ -80,14 +95,6 @@ def register():
             return '<h2> Duplicate user</h2><br><a href="/register">Go Back</a>'
    
     return render_template('signup.html')
-
-
-@app.route('/', methods=['POST', 'GET'])
-def index():
-
-    posts = Blog.query.all()
-
-    return render_template('blog.html', title="Blog", posts=posts)
 
 
 @app.route('/post/<int:post_id>', methods=['GET'])
@@ -107,7 +114,9 @@ def newpost():
 def addpost():
     new_title = request.form['title']
     new_body = request.form['body']
-    new_post = Blog(new_title, new_body)
+    username = session['username'] 
+    user = User.query.filter_by(username=username).first()
+    new_post = Blog(new_title, new_body, user)
     db.session.add(new_post)
     db.session.commit()
 

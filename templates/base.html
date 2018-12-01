@@ -17,22 +17,22 @@
                 color: white;
             }
             .upperbar a {
-                color:floralwhite;
+                color: gray;
                 padding-right: 20px;
                 
             }
-            ul {
+            nav ul {
                 list-style-type: none;
                 margin: 0;
                 padding: 0;
                 overflow: hidden;
-                background-color: gainsboro;
+                background-color: gray;
             }
-            li {
+            nav ul li {
                 float: left;
             
             }
-            li a {
+            nav ul li a {
                 display: block;
                 color: white;
                 text-align: left;
@@ -40,26 +40,30 @@
                 text-decoration: none;
             }
 
-            li a:hover{
-                background-color: lavender;
+            nav ul li a:hover{
+                background-color: lightgray;
+                color: black;
             }
         </style>
     </head>
     <body>
         <nav>
             <ul>
-                <li><a class="active" href="/">Home</a></li>
                 <li><a href="/">All Posts</a></li>
-                <li><a href="/newpost">New Posts</a></li>
+
+                {% if not session.username %}
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/signup">Sign Up</a></li>
+                {% else %}
+                <br>
+                <br>
+                    <li><a href="/logout">Log out</a></li>
+                {% endif %}
             </ul>
         </nav>
 
         {% block content %}
         {% endblock %}
-
-        <div class='footer'>
-                <a href="/logout">Log out</a>
-            </div>
 
     </body>
 </html>
