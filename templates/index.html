@@ -4,9 +4,15 @@
 {% block content %}
     {% if session.username %}
     <div class="upperbar">
-        <h1>Build Your Blog</h1>
+        <h1>Your Blog</h1>
         <a href="/newpost">+ Add a Post</a>
     </div>
+    {% else %}
+    <div class="upperbar">
+            <h1>All Blog Users</h1>
+            
+    </div>
+
     {% endif %}
 
     {% if users|length == 0 %}
