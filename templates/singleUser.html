@@ -2,12 +2,12 @@
 
 
 {% block content %}
-    {% if session.username %}
+    
         <div class="upperbar">
-            <h1>{{post.username}}'s Blog</h1>
+            <h1>{{user.username}} Blog</h1>
         
         </div>
-    {% endif %}
+   
 
     {% if posts|length == 0 %}
         <p> No new posts yet</p>
@@ -15,13 +15,14 @@
 
         <ul>
             {% for post in posts %}
-                <li><h4>
-                    <a href="/post/{{ post.id }}">{{ post.title }}</a></h4>
-
-                    {{ post.body }}
-                </li>
-                <br>
-                <br>
+                <div class="post">
+                    <h2><a href="/post/{{ post.id }}">{{ post.title }}</a></h2>
+                    <p>{{ post.body }}</p>
+                    <p>
+                        "written by" <br/>
+                        <a href="/blog?user={{ post.owner_id}}">{{ post.owner.username }}</a>
+                    </p>
+                </div>
             {% endfor %}
         </ul>
     {% endif %}

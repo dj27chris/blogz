@@ -15,17 +15,15 @@
 
         <ul>
             {% for post in posts %}
-                <li><h4>
-                    <a href="/post/{{ post.id }}">{{ post.title }}</a></h4>
+                <div class="post">
+                    <h2><a href="/post/{{ post.id }}">{{ post.title }}</a></h2>
+                    <p>{{ post.body }}</p>
+                    <p>
+                        "written by" <br/>
+                        <a href="/blog?user={{ post.owner_id}}">{{ post.owner.username }}</a>
+                    </p>
+                </div>
 
-                    {{ post.body }}
-                </li>
-
-                <li>
-                    {{ post.username}}
-                </li>
-                <br>
-                <br>
             {% endfor %}
         </ul>
     {% endif %}

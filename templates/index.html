@@ -9,18 +9,13 @@
     </div>
     {% endif %}
 
-    {% if posts|length == 0 %}
-        <p> No new posts yet</p>
+    {% if users|length == 0 %}
+        <p> No Blogs</p>
     {% else %}
         <ul>
-            {% for post in posts %}
-                <li><h4>
-                    <a href="/post/{{ post.id }}">{{ post.title }}</a></h4>
-
-                    {{ post.body }}
+            {% for user in users %}
+                <li><a href="/blog?user={{ user.id }}">{{ user.username }}</a>
                 </li>
-                <br>
-                <br>
             {% endfor %}
         </ul>
     {% endif %}

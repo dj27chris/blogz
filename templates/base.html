@@ -49,14 +49,14 @@
     <body>
         <nav>
             <ul>
-                <li><a href="/">All Posts</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/blog">All Posts</a></li>
 
                 {% if not session.username %}
                     <li><a href="/login">Login</a></li>
                     <li><a href="/signup">Sign Up</a></li>
                 {% else %}
-                <br>
-                <br>
+                
                     <li><a href="/logout">Log out</a></li>
                 {% endif %}
             </ul>

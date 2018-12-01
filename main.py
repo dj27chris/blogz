@@ -39,22 +39,16 @@ class User(db.Model):
 
 @app.before_request
 def requre_login():
-    allowed_routes = ['login', 'signup', 'index', 'post']
+    allowed_routes = ['login', 'signup', 'index', 'blog']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 @app.route('/', methods=['GET'])
 def index():
-    userId = request.args.get('user')
+    users = User.query.all()
+    return render_template('index.html', title="Blogs", users=users)
 
-    if userId:
-        posts = Blog.query.filter_by(owner_id=userId).all()
-    else:
-        posts = Blog.query.all()
-
-    return render_template('index.html', title="Blog", posts=posts)
-
-
+    
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -97,10 +91,23 @@ def signup():
     return render_template('signup.html')
 
 
-@app.route('/post/<int:post_id>', methods=['GET'])
-def post(post_id):
+@app.route('/blog', methods=['GET'])
+def blog():
+    userId = request.args.get('user')
 
-    post = Blog.query.get(post_id)
+    if userId:
+        posts = Blog.query.filter_by(owner_id=userId).options(db.joinedload('owner')).all()
+        user = User.query.get(userId)
+        return render_template('singleUser.html', title="Blog", posts=posts, user=user)
+    else:
+        posts = Blog.query.options(db.joinedload('owner')).all()
+        return render_template('blog.html', title="Blog", posts=posts)
+
+
+@app.route('/post/<int:blog_id>', methods=['GET'])
+def post(blog_id):
+
+    post = Blog.query.get(blog_id)
 
     return render_template('blog.html', title="Blog", posts=[post])
 
